@@ -25,20 +25,34 @@ public class Kontenerowiec()
             obecnaWaga = obecnaWaga+  kontener.MasaLadunku + kontener.WagaWlasna;
         }
     }
-
-    public void UsunKontener(Kontener kontenerDoUsuniecia)
+    public void Zaladunek(List<Kontener> kontenery)
     {
-        if (konteneryNaStatku.Contains(kontenerDoUsuniecia))
-        {
-            konteneryNaStatku.Remove(kontenerDoUsuniecia);
-            obecnaWaga = obecnaWaga - (kontenerDoUsuniecia.MasaLadunku + kontenerDoUsuniecia.WagaWlasna);
-            Console.WriteLine($"Usunieto kontener: {kontenerDoUsuniecia}");
+        
+            for (int j = 0; j < kontenery.Count(); j++)
+            {
+                if (kontenery[j].MasaLadunku + kontenery[j].WagaWlasna + obecnaWaga < maxLacznaWaga && konteneryNaStatku.Count() + kontenery.Count() < maxLiczbaKontenerow)
+                {
+                    konteneryNaStatku.Add(kontenery[j]);
+                    obecnaWaga = obecnaWaga + kontenery[j].MasaLadunku + kontenery[j].WagaWlasna;
+                }
+            }
+        
 
-        }
-        else
+    }
+
+    public void UsunKontener(int id)
+    {
+        
+        for(int i = 0; i < konteneryNaStatku.Count(); i++)
         {
-            Console.WriteLine("nie ma takiego kontenera na statku");
+            if (konteneryNaStatku[i].Id == id){
+                konteneryNaStatku.Remove(konteneryNaStatku[i]);
+                obecnaWaga = obecnaWaga - (konteneryNaStatku[i].MasaLadunku + konteneryNaStatku[i].WagaWlasna);
+                Console.WriteLine($"Usunieto kontener: {konteneryNaStatku[i]}");
+            }
         }
+        
+   
     }
     public void ZastapKontener(int idKontDozastapienia, Kontener nowyKontener)
     {
@@ -46,10 +60,11 @@ public class Kontenerowiec()
         {
             konteneryNaStatku.Remove(konteneryNaStatku[idKontDozastapienia]);
             konteneryNaStatku.Add(nowyKontener);
+            Console.WriteLine($"Zastąpiono kontener nr {idKontDozastapienia} kontenerem: {nowyKontener}");
         }
     }
     
-    public void getInfo()
+    public void GetInfo()
     {
         Console.WriteLine($"Waga kontenerowca: {obecnaWaga},\nLiczba kontenerów:{konteneryNaStatku.Count()}\nTypy Kontenerów wraz z ID: ");
         
@@ -58,6 +73,27 @@ public class Kontenerowiec()
             Console.WriteLine( konteneryNaStatku[i].ToString());
         }
     }
+    public void PrzeniesKontener(Kontenerowiec kon , int id)
+    {
+        Kontener kon1 = null;
+        foreach(var i in konteneryNaStatku)
+        {
+            if(i.Id == id)
+            {
+                kon1 = i;
+                break;
+            }
+        }
+        if(kon1 == null)
+        {
+            Console.WriteLine("Nie ma kontenera z takim ID");
+        }
+        UsunKontener(id);
+        kon.Zaladunek(kon1);
+        Console.WriteLine($"Przeniesiono kontener o ID {id}");
+    }
+  
+    
                                                    
 
 
